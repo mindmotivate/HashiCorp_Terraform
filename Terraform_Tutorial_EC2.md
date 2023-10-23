@@ -15,6 +15,10 @@ Download Terraform
 
 First  things first! Lets download Terraform from: https://developer.hashicorp.com/terraform/downloads
 
+![installterraform](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/225ca5f8-2d6e-4754-814b-a8fcc13993ad)
+
+
+
 
 Make sure you download the appropriate version of Terraform for your operating system!
 
