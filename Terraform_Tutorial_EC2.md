@@ -15,6 +15,7 @@ Let's demonstrate the power of Terraform by creating a simple EC2 instance!
 
 First  things first! Lets download Terraform from: https://developer.hashicorp.com/terraform/downloads
 
+![installterraform](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/42e34920-f35b-4b56-8596-ade9e4aab095)
 
 ***Make sure you download the appropriate version of Terraform for your operating system!***
 
@@ -51,7 +52,14 @@ Initializing provider plugins...
 - Using previously-installed hashicorp/aws v5.15.0
 Terraform has been successfully initialized!
 ````
+
+![t_intit](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/d22c95a8-9394-47a3-a5ea-9e8486dde8f7)
+
+![terraform_init](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/1625d31b-21ed-4fc4-870e-22d4c37b9284)
+
+
 If we use the command: ```terraform apply``` we will execute the launch of our EC2:
+
 ````
 
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
@@ -120,6 +128,8 @@ aws_instance.example: Creation complete after 32s [id=i-0bd6bd558c496ee4b]
 
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 ````
+![terraform](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/ac2bc8d3-66cd-4565-800c-fd3e8f3ac428)
+
 
 
 If we use the command: ````terraform show```` we will seee a summary of the ec2 we just created:
@@ -214,7 +224,16 @@ resource "aws_instance" "example" {
 }
 
 `````
+
+
+
+
 Congratulations, you have successfully launched your first EC2 using nothing more than a Terraform script!....Isn't Automation great!!!
+
+If you navigate to your EC2 console you will notice that you have a fresh new EC2 instance running!
+
+![ec2running](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/a84762ad-ddcd-4201-8674-c7f92e97e6f0)
+
 
 Now let's DESTROY the EC2  isntance so we dont get charged!
 
@@ -223,7 +242,12 @@ Now let's DESTROY the EC2  isntance so we dont get charged!
 When you are finished with the EC2 instance, you can destroy it by running the following command:
 ````terraform destroy````
 This command will destroy all resources that were created by Terraform, including the EC2 instance.
+![destroy](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/a66ebb15-4dde-41e3-8bd6-0aace98a63a4)
 
+
+If you check your AWS Console, you will see that your instance has infact...been terminated!
+
+![console_termination](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/8d07d857-0ddf-42ab-90a1-90985981d4a0)
 
 
 That’s it! You have successfully created and destroyed an EC2 instance in AWS using Terraform commands only 1
