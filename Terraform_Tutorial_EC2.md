@@ -15,8 +15,9 @@ Let's demonstrate the power of Terraform by creating a simple EC2 instance!
 
 First  things first! Lets download Terraform from: https://developer.hashicorp.com/terraform/downloads
 
+![installterraform](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/a3cba3df-c518-4171-8a36-7406110a555a)
 
-Make sure you download the appropriate version of Terraform for your operating system!
+***Make sure you download the appropriate version of Terraform for your operating system!***
 
 # Create a new directory
 
