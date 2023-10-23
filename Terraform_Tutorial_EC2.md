@@ -11,7 +11,7 @@ Terraform is highly compatible with AWS and provides a rich set of resources tha
 
 Let's demonstrate the power of Terraform by creating a simple EC2 instance!
 
-Download Terraform 
+# Download Terraform 
 
 First  things first! Lets download Terraform from: https://developer.hashicorp.com/terraform/downloads
 
