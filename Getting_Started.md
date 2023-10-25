@@ -4,6 +4,10 @@ Tools required for utilizing Terraform with AWS Console, including VSCode, the a
 
 >****NOTE: DO NOT INSTALL ANY OF THE FOLLOWING COMPONENTS ON AN CLOUD DRIVE AS THEY WILL NOT FUNCTION PROPERLY!***
 
+<br>
+
+## You will need to obtain the following:
+
 **VSCode**
 
 * [VSCode](https://code.visualstudio.com/)
@@ -19,6 +23,8 @@ Tools required for utilizing Terraform with AWS Console, including VSCode, the a
 * [AWS CLI](https://aws.amazon.com/cli/)
 
 
+<br>
+
 
 ## Brief overview of Process:
 
@@ -31,7 +37,7 @@ If you create the file from scratch just make sure you save with the appropriate
 
 ***Apply*** the changes. *This will create or update your AWS resources.*<br>
 
-
+<br>
 
 ## VSCode extension features:
 
@@ -41,10 +47,13 @@ Code completion
 Linting
 VSCode extensions and features for managing AWS resources:
 
+<br>
+
 **AWS Toolkit for VSCode:**
 Tree view of AWS resources
 Ability to execute AWS CLI commands
 
+<br>
 
 ## To check if Terraform is properly installed and its version:
 
