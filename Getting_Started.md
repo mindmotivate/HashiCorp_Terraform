@@ -66,7 +66,7 @@ terraform version
 
 >Once the AWS Toolkit extension is installed, you can authenticate your AWS account with VSCode. To do this, click the Command Palette (Ctrl+Shift+P) and search for AWS: Add a New Connection. Select AWS CLI from the list of authentication methods and enter your AWS access key ID and secret access key. Click Connect to authenticate your account.
 
-Here is an example of how the above process would look in a cmd line environment:
+**Here is an example of how the above process would look in a cmd line environment:**
 ````
 # Install the AWS CLI
 pip install awscli
@@ -122,4 +122,6 @@ terraform apply
 
 
 
+***Ok great, now that you have everything set-up we will go more in-depth into creating an EC2 and tearing it down after were done!
+Check out the next tutorial!***
 
