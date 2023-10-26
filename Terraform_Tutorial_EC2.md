@@ -1,6 +1,5 @@
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-tf/terraformlogo.png" width="5%" height="5%"><br>
 # Terraform Introduction
-
-
 Terraform is an open-source infrastructure as code (IaC) tool that allows you to define and manage your cloud infrastructure in a declarative manner. Terraform uses a simple, human-readable language called the HashiCorp Configuration Language (HCL) to define your infrastructure. With Terraform, you can create, modify, and destroy infrastructure resources across multiple cloud providers, including Amazon Web Services (AWS) 
 
 In other words, its designed to make life easier for the average AWS Cloud Developer!
