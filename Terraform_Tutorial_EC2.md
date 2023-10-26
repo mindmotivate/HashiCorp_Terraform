@@ -23,8 +23,21 @@ First  things first! Lets download Terraform from: https://developer.hashicorp.c
 
 After it is installed, you will need to create a new directory on your local computer where you will store your Terraform configuration files.
 
+>*Note: There are multiple ways to accomplish the directory and file creation. The following command creates the code and terraform directories recursively from your terminal window in bash, if they do not already exist.
+
+````
+Command:mkdir -p ~/Desktop/code/terraform
+````
+
 # Create a new file
 Let's create a new file named `main.tf` in the directory you created!
+
+>Note: this task can also be completed from within VSC
+>
+````
+Command:touch ~/Desktop/code/terraform/main.tf
+``````
+Once the file is open in VSC
 
 We will paste our ec2 creation script here:
 
@@ -39,7 +52,7 @@ resource "aws_instance" "example" {
 }
 ````
 
-*Make sure you save your file!*
+***Make sure you save your file!***
 
 If we use the command: ```terraform init``` we will intialize terraform on our copy of VSCode:
 ````
