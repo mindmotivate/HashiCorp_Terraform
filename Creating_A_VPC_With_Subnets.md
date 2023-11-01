@@ -11,18 +11,46 @@ This tutorial is intended for cloud savvy individuals who have a basic understan
 * AWS account
 * Terraform installed
 * Git client installed
-* [Forked the class5 repository from GitHub](https://github.com/malguswaf/class5)
+* [Forked GitHub Repository](https://github.com/malguswaf/class5)
+* Create and navigate to new project folder
 
-## Instructions
+## Instructional Guide
 
 1. **Run Authentication Module**
 
     1. Create a new file called `0-Auth.tf` in your project directory.
-    2. Copy and paste the code from the `1-auth.tf` file in the forked class5 repository.
+    2. Copy and paste the code from the `0-Auth.tf` file in the forked "class5" repository.
     3. Make the following adjustments to the code:
-        * Replace `aws_vpc.ireland.id` with `aws_vpc.app1.id`.
-        * Replace the included `cidr_block` reference with your own.
+        * Replace region = "eu-west-1" with your desired region
+        * *(This should be the same region which your AWS console is situated in)*
         * Add your desired tags.
+        * At this point "SAVE" (Ctrl-S) your file!
+
+Your code should look similar to this:
+
+```
+provider "aws" {
+  region = "us-east-1"
+}
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+
+```
+
+
+Once you have completed all of the steps above, you can run the following commands to create your VPC and subnets:
+
+- Terraform init
+- Terraform plan
+- Terraform apply
+
 
 2. **Run VPC Module**
 
@@ -45,7 +73,6 @@ This tutorial is intended for cloud savvy individuals who have a basic understan
 
 Once you have completed all of the steps above, you can run the following commands to create your VPC and subnets:
 
-Use code with caution. Learn more
 terraform init
 terraform plan
 terraform apply
