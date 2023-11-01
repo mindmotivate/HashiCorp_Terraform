@@ -89,9 +89,9 @@ Once you have completed all of the steps above, you can run the following comman
     1. Create a new file called `2-subnets.tf` in your project directory.
     2. Copy and paste the code from the `2-subnets.tf` file in the forked class5 repository.
     3. Make the following adjustments to the code:
-        * Replace `aws_vpc.ireland.id` with `aws_vpc.app1.id`.
-        * Replace the included `cidr_block` reference with your own.
-        * Replace the third octet with the appropriate public and private IP subnet designations.
+        * Ensure that the name is approprate:`aws_vpc.app1.id` (for your public and private subnets in each AZ)
+        * Replace the included `cidr_block` reference with your own (for your public and private subnets in each AZ)
+        * Replace the third octet with the appropriate public and private IP subnet designations (for your public and private subnets in each AZ)
         * Add your desired tags.
         * At this point "SAVE" (Ctrl-S) your file!
       
