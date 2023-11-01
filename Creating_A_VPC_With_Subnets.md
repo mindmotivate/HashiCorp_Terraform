@@ -16,7 +16,7 @@ This tutorial is intended for cloud savvy individuals who have a basic understan
 
 ## Instructional Guide
 
-1. **Run Authentication Module**
+1. ### Run Authentication Module
 
     1. Create a new file called `0-Auth.tf` in your project directory.
     2. Copy and paste the code from the `0-Auth.tf` file in the forked "class5" repository.
@@ -52,16 +52,39 @@ Once you have completed all of the steps above, you can run the following comman
 - Terraform apply
 
 
-2. **Run VPC Module**
+2. ### Run VPC Module
 
-    1. Create a new file called `1-VPC.tf` in your project directory.
-    2. Copy and paste the code from the `1-VPC.tf` file in the forked class5 repository.
+    1. Create a new file called `1-VPC.tf` in your "project1" directory.
+    2. Copy and paste the code from the `1-VPC.tf` file in the forked "class5" repository.
     3. Make the following adjustments to the code:
-        * Replace `aws_vpc.ireland.id` with `aws_vpc.app1.id`.
-        * Replace the included `cidr_block` reference with your own.
+        * Replace the included `cidr_block` reference if needed so that it matches your region and planning document.
         * Add your desired tags.
+      
 
-3. **Run Subnet Module**
+Your code should look similar to this:
+
+```
+# this  makes  vpc.id which is aws_vpc.app1.id
+resource "aws_vpc" "app1" {
+  cidr_block = "10.32.0.0/16"
+
+  tags = {
+    Name = "app1"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Mustafar"
+  }
+}
+
+```
+
+Once you have completed all of the steps above, you can run the following commands to create your VPC and subnets:
+
+- Terraform init
+- Terraform plan
+- Terraform apply
+
+3. ### Run Subnet Module**
 
     1. Create a new file called `2-subnets.tf` in your project directory.
     2. Copy and paste the code from the `2-subnets.tf` file in the forked class5 repository.
@@ -70,6 +93,96 @@ Once you have completed all of the steps above, you can run the following comman
         * Replace the included `cidr_block` reference with your own.
         * Replace the third octet with the appropriate public and private IP subnet designations.
         * Add your desired tags.
+        * At this point "SAVE" (Ctrl-S) your file!
+      
+Your code should look similar to this:
+```
+resource "aws_subnet" "public-us-east-1a" {
+  vpc_id                  = aws_vpc.app1.id
+  cidr_block              = "10.32.1.0/24"
+  availability_zone       = "us-east-1a"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public-us-east-1a"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
+  }
+}
+
+
+
+#these are for private
+resource "aws_subnet" "private-us-east-1a" {
+  vpc_id            = aws_vpc.app1.id
+  cidr_block        = "10.32.11.0/24"
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "private-us-east-1a"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
+  }
+}
+#these are for public
+resource "aws_subnet" "public-us-east-1b" {
+  vpc_id                  = aws_vpc.app1.id
+  cidr_block              = "10.32.2.0/24"
+  availability_zone       = "us-east-1b"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public-us-east-1b"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
+  }
+}
+
+#these are for private
+resource "aws_subnet" "private-us-east-1b" {
+  vpc_id            = aws_vpc.app1.id
+  cidr_block        = "10.32.12.0/24"
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name = "private-us-east-1b"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
+  }
+}
+#these are for public
+resource "aws_subnet" "public-us-east-1c" {
+  vpc_id                  = aws_vpc.app1.id
+  cidr_block              = "10.32.3.0/24"
+  availability_zone       = "us-east-1c"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public-us-east-1c"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
+  }
+}
+
+#these are for private
+resource "aws_subnet" "private-us-east-1c" {
+  vpc_id            = aws_vpc.app1.id
+  cidr_block        = "10.32.13.0/24"
+  availability_zone = "us-east-1c"
+
+  tags = {
+    Name = "private-us-east-1c"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
+  }
+}
+```
 
 Once you have completed all of the steps above, you can run the following commands to create your VPC and subnets:
 
