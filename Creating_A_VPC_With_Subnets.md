@@ -1,20 +1,64 @@
 # Introduction to AWS Terraform Tutorial
 
-This tutorial will walk you through the steps of creating an AWS VPC with subnets using Terraform. Terraform is an open-source infrastructure as code (IaC) software tool that allows you to define your infrastructure as code and provision it to multiple cloud providers.
-
-## Audience
-
-This tutorial is intended for cloud savvy individuals who have a basic understanding of AWS and Terraform.
+This tutorial will walk you through the steps of creating an AWS VPC with subnets using Terraform. At this point in time we have demonstrated or ability to create VPC's and Subnets from within the AWS console. We will not apply that knowledge towards the creation of our Terrafrom modules as we build out infrastructure using the terraform in our VSC terminal! 
 
 ## Prerequisites
+But before we begin let's make sure we have the following items ready to go:
 
 * AWS account
 * Terraform installed
 * Git client installed
 * [Forked GitHub Repository](https://github.com/malguswaf/class5)
-* Create and navigate to new project folder
+* VSC Up and running with new project1 folder ready to go!
 
-## Instructional Guide
+
+## Terraform Install (via Choclety for Windows)
+>*If you **already have terraform** installed please skip this step.*
+>*If you **do not** have terraform installed, you may so using the following options:*
+
+**Choclety:** Enter the following into your Bash command line:
+```
+install choclety
+```
+Now let's say you already have Terraform installed, you can upgrade your vesriosn with the following command:
+```
+choco upgrade terraform
+```
+If you simply want to check to see which version of terraform you currently have, use the following command:
+```
+terraform version
+```
+
+**Note: If for some reason your choco install fails you can download Terraform from: https://developer.hashicorp.com/terraform/downloads**
+
+<br>
+
+### Open VSC editor
+Next, we will open up our copy of Visual Studio Code
+From within VSC code, we will create a new directory called "Project1"
+VSC will display a pop=up message: "Do you to trust this folder" (Click "Yes")
+From within our "project1" folder we will create a new file called: "0-Auth.tf" (be sure to add the ".tf" extention at the end or else VSC will not recognize the file as a "terraform" file)
+
+### Open your Github account
+Next, we will open "github" so that we can "fork" the code from our class repository
+From within your github account navigate to: (https://github.com/malguswaf)
+*simply type this in a seperate tab or type in your web browser search bar*
+
+### "Fork" the code
+-Locate the repository entitled: "class5"<br>
+-Click on the "Fork" button located next to the<br>
+*We are simply making our own local copy of the the class5 module files*<br>
+-After you have completed forking, you will see the files appear in your very own "class5" repository<br>
+-Keep these file readily available as we will be using them to create our modules.<br>
+
+
+### Obtain module code
+Navigate to your forked repository and locate the: "1-auth.tf" file
+Here's the "malguswaf/class5" repository again: [Forked GitHub Repository](https://github.com/malguswaf/class5)
+Simply copy the code from the file and paste it into your newly created "1-auth.tf" file
+
+## Let's Begin Building Our Modules in VSC!
+In your newly created "project1" directory please perform the following:
 
 1. ### Run Authentication Module
 
@@ -46,11 +90,11 @@ terraform {
 
 
 Once you have completed all of the steps above, you can run the following commands to create your VPC and subnets:
-
-- Terraform init
-- Terraform plan
-- Terraform apply
-
+```
+Terraform init
+Terraform plan
+Terraform apply
+```
 
 2. ### Run VPC Module
 
@@ -80,9 +124,11 @@ resource "aws_vpc" "app1" {
 
 Once you have completed all of the steps above, you can run the following commands to create your VPC and subnets:
 
-- Terraform init
-- Terraform plan
-- Terraform apply
+```
+Terraform init
+Terraform plan
+Terraform apply
+```
 
 3. ### Run Subnet Module**
 
@@ -186,55 +232,23 @@ resource "aws_subnet" "private-us-east-1c" {
 
 Once you have completed all of the steps above, you can run the following commands to create your VPC and subnets:
 
-terraform init
-terraform plan
-terraform apply
+```
+Terraform init
+Terraform plan
+Terraform apply
+```
 
 Tips
 
-Be sure to save your Terraform configuration files before running any commands.
-Always run Terraform commands from within the correct directory.
-Do not erase or alter the Terraform state file.
-Conclusion
-This tutorial has shown you how to create an AWS VPC with subnets using Terraform. You can now use this knowledge to create your own VPCs and subnets for your own AWS applications.
+Congratutlations! You have build your first VPC and Subnet architecture with Terraform!
 
-I have made the following changes:
-
-Added Markdown headings and formatting to make the text more readable.
-Added a link to the forked class5 repository.
-Added a section on tips for running Terraform commands.
-Fixed some minor grammatical errors.
+For those of you who want a more granular process approach continue reading below:
 
 
+## Need More Details?
 
-
-
-
-
-
-
-
-
-
-## Getting Started
-
-
-## Prelimary Steps
 # Download Terraform 
 
-First things first! If you haven't already, Let's download Terraform from: https://developer.hashicorp.com/terraform/downloads
-
-If you do not have terraform installed, you may so using the following options:
-
-Depending on your operating system, choose one of the following:
-
-Homebrew:
-
-Enter the following into your Bash command line:
-
-Choclety:
-
-Enter the following into your Bash command line:
 
 
 # Fork The Class 5 Repository from GITHUB
@@ -246,28 +260,15 @@ We are simply making our own local copy of the the class5 module files
 After you have completed forking, you will see the files appear in your very own "class5" repository
 Keep these file readily available as we will be using them to create our modules.
 
-
-
-
 # Run Authentication Module
 
-### Open VSC editor
-Next, we will open up our copy of Visual Studio Code
-From within VSC code, we will create a new directory called "Project1"
-VSC will display a pop=up message: "Do you to trust this folder" (Click "Yes")
-From within our "project1" folder we will create a new file called: "0-Auth.tf" (be sure to add the ".tf" extention at the end or else VSC will not recognize the file as a "terraform" file)
 
-### Obtain module code
-Navigate to your forked repository and locate the: "1-auth.tf" file
-Simply copy the code from the file and paste it into your newly created "1-auth.tf" file
 
 ### Perform Code Adjustments
 We will make the following adjustments to the code:
-Replace th
+?????????????????????????????????
 
 At this point "SAVE" (Ctrl-S) your file!
-
-Your code should look similar to this:
 
 ### Navigate to present working directory
 *If you currently do not see your terminal window on the screen navigate the VSC menu bar and click on "new terminal"
@@ -290,8 +291,6 @@ Hint: Do not erase, alternate terraform.tfstate file DO NOT DO IT!!!!!!!
 Make sure you have an established planning document with your desired CIDR range ec: 10.32.9.0/16
 
 # Run VPC Module
-
-
 We will create the file for the VPC module inside of our "project1" folder.
 From within your project1 directory, create a new file entitled: 1-VPC.tf
 Navigate to your forked repository and locate the: "1-VPC.tf" file
@@ -300,21 +299,20 @@ Simply copy the code from the file and paste it into your newly created "1-VPC.t
 We will make the following adjustments to the code:
 Replace the aws_vpc.ireland.id label with aws_vpc.app1.id
 Replace the included cidr_block reference with your own (ensure that you chosen region is represented appropriately in second octet ex: replace 78 w/ 32)
-Next, add your desired tags ex: Name= ”Public”, Service=app1, Owner=Chewbaca, Planet=Mustafar
-
+Next, add your desired tags ex:
+*Name= ”Public”, Service=app1, Owner=Chewbaca, Planet=Mustafar*
 
 At this point "SAVE" (Ctrl-S) your file!
 
-Your code should look similar to this:
-
-- Terraform init
-- Terraform plan
-- Terraform apply
-
+```
+Terraform init
+Terraform plan
+Terraform apply
+```
 
 
 ## Prelimary Steps
-Make sure you are working from your Planning doxument which should contain you pre-written subnets!
+Make sure you are working from your Planning document which should contain you pre-written subnets!
 
 
 # Run Subnet Module
@@ -339,7 +337,9 @@ Your code should look similar to this:
 
 Run the following command individually in the following order:
 
-- Terraform init
-- Terraform plan
-- Terraform apply
+```
+Terraform init
+Terraform plan
+Terraform apply
+```
 
