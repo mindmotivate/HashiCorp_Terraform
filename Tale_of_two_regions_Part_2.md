@@ -73,7 +73,7 @@ Ensure that you have the following:
         * Specifcy that this is the same region which your AWS console is situated in!*<br>
         * Add your desired tags.<br>
         * At this point "SAVE" (Ctrl-S) your file!<br>
-    <br>
+    
 Here is our **"0-Auth.tf"** code:
 ```
 provider "aws" {
@@ -772,7 +772,7 @@ Individual modules also improve maintainability. Modules encapsulate implementat
 > **3. Consistency**
 Creating individual modules can also help ensure consistency. Modules can be tested and validated before being used in production, which helps ensure that infrastructure is created consistently across deployments. For example, a module for a web application stack could encapsulate all resources required to deploy a web application, such as EC2 instances, a load balancer, and a database. This module could then be used in all deployments to ensure that web applications are deployed consistently.
 
-Ok great, so what about the modules we created? what are they for exactly?
+Ok great, so what about the modules we created.... what are they for exactly?
 
 Here's a summary...
 
