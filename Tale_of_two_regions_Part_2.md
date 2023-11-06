@@ -108,6 +108,25 @@ resource "aws_vpc" "app1" {
     Planet  = "Mustafar"
   }
 }
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id       = aws_vpc.app1.id
+  service_name = "com.amazonaws.us-east-1.s3"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = [
+    aws_route_table.private.id,
+    aws_route_table.public.id
+  ]
+
+  tags = {
+    Name    = "app1_s3_endpoint"
+    Service = "application1"
+    Owner   = "Chewbacca"
+    Planet  = "Mustafar"
+  }
+}
+
 ```
 Once you have pasted the code run the following terrrafor terminal commands:
 ```
