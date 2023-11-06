@@ -1,4 +1,4 @@
-# Tale Of Two Regions
+# Tale Of Two Regions Part 1
 
 > This project will require us to create a 2-region AWS deployment<br>The first region we will outline is Oregon (us-west-1)
 
