@@ -459,7 +459,7 @@ terraform apply
 ``` 
 ### 8. Security Group for Application Load Balancer**
 1. Create a new file called `7-LBSG.tf` in your project directory.<br>
-2. You may use the following documentation: (https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group)
+2. You may use the following documentation: (https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group),
 (https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest)<br> 
 5. *Note: Alter the code as necessary and provide the appropriate ingress rule via port 80. The security group is specifically fro the LB and will only consider HTTP ingress traffic<br>
 6. Add your desired tags.<br>
@@ -500,6 +500,11 @@ terraform plan
 terraform apply
 ```  
 ### 9. Launch Template**
+1. Create a new file called `8-LT.tf` in your project directory.<br>
+2. You may use the following documentation: (https://registry.terraform.io/modules/bootlabstech/fully-loaded-eks-cluster/aws/latest/submodules/launch-templates)
+3. *Note: Alter the code as necessary and provide the appropriate AMI Image and instance type and security group
+4. Add your desired tags.<br>
+5. "SAVE" (Ctrl-S) your file!<br>>
 ```
 resource "aws_launch_template" "app1_LT" {
   name_prefix   = "app1_LT"
@@ -579,6 +584,11 @@ terraform plan
 terraform apply
 ```  
 ### 10.Target group**
+1. Create a new file called `9-TG.tf` in your project directory.<br>
+2. You may use the following documentation: (https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group)
+3. *Note: Alter the code as necessary and provide the appropriate port and esure your target group is associated with your VPC
+4. Add your desired tags.<br>
+5. "SAVE" (Ctrl-S) your file!<br>>
 ```
 resource "aws_lb_target_group" "app1_tg" {
   name     = "app1-target-group"
@@ -613,6 +623,11 @@ terraform plan
 terraform apply
 ```  
 ### 11.Load Balancer**
+1. Create a new file called `10-ALB.tf` in your project directory.<br>
+2. You may use the following documentation: (https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest)
+3. *Note: load balancers must always be associated with public subnets. This is because load balancers need to have a public IP address in order to receive inbound traffic from the internet. Ensure that you have specified all of your public subnets accordingly!
+4. Add your desired tags.<br>
+5. "SAVE" (Ctrl-S) your file!<br>>
 ```
 resource "aws_lb" "app1_alb" {
   name               = "app1-load-balancer"
@@ -652,6 +667,17 @@ terraform plan
 terraform apply
 ```  
 ### 12.Autoscaling Group**
+1. Create a new file called `11-ASG.tf` in your project directory.<br>
+2. You may use the following documentation: (https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest)
+3. *Note: ASGs are often used to launch you templates in private environment. Ensure that you have specified all of your private subnets accordingly!
+4. Add your desired tags.<br>
+5. Similar to the AWS GUI, you will have the ability to select capacity allocations associated with you ASG by using the following module: (https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_policy)<br>
+6. These optional items are not found in the registry, however if youd like to add them , you can find them in you AWS CLI here:
+```
+aws autoscaling describe-lifecycle-hooks
+aws--auto-scaling-group-name my-asg
+```
+6. "SAVE" (Ctrl-S) your file!<br>>
 ```  
 resource "aws_autoscaling_group" "app1_asg" {
   name_prefix           = "app1-auto-scaling-group-"
