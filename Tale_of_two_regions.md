@@ -1,73 +1,47 @@
 # Tale Of Two Regions
 
-Your Mission...(should you choose to except it!)
+> This project will require us to create a 2-region AWS deployment<br>The first region we will outline is Oregon (us-west-1)
 
-This project will require us to create a 2-region AWS deployment 
-The first region we w ill outline is Oregon
-It will be configured with:
-4 availability zones
-SSL
-2 Target Groups
+***It will be configured with the following requirements:***
+* 4 availability zones
+* SSL
+* 2 Target Groups
 
-We will execute this architecture using Terraform!
+***We will execute this architecture using the following Terraform modules:***
 
-> Ok, first let's outline the steps and figure out what is to be included:
+### Modules List:
 
-
-Components:
-
-VPC (Virtual Private Cloud)
-4 Public subnets (1 for each AZ)
-4 Private subnets (1 for each AZ)
-1 Internet gateway (IGW)
-1 NAT gateway
-2 Public route tables (1 for each AZ)
-2 Private route tables (1 for each AZ)
-2 Security groups (1 for the public web servers and 1 for the private web servers)
-1 Launch template for the web servers
-2 Target groups (1 for the public web servers and 1 for the private web servers)
-1 Application load balancer (ALB)
-1 Autoscaling group for the web servers
-1 SSL certificate
-
-Steps:
-
-1. Create a Terraform configuration file for the Region 1: Oregon deployment.
-2. Initialize Terraform.
-3. Plan the deployment.
-4. Apply the deployment.
-5. Configure the SSL certificate for the ALB.
-6. Configure the ALB to listen on port 443 and forward traffic to the two target groups.
-7. Configure the web servers to use the SSL certificate.
-8. Configure the autoscaling group to launch and maintain the web servers.
-9. Verify the deployment.
-
-
-### What do we need? 
-* VPC: This would be our logically isolated porton of AWS cloud real estate where you can launch AWS resources in a private network.
-* Subnet: A subnet is a division of a VPC. Subnets is simply a range of IP addresses.  Your basically dividing your VPC into smaller networks
-* EC2 instance: An EC2 instance is a virtual machine that you can run in the AWS cloud. (the most commonly used service in AWS!)
-* Target group: A target group is a collection of EC2 instances that you can use to distribute traffic across.
-* Security group: A security group acts as a firewall of sorts for your EC2 instances. It controls inbound and outbound traffic to your instances.
-* Internet gateway (IGW): An IGW allows traffic from your VPC to flow to and from the internet.
-* Route table: A route table determines how traffic is routed within your VPC and to and from the internet.
-
+* VPC (Virtual Private Cloud)
+* 4 Public subnets (1 for each AZ)
+* 4 Private subnets (1 for each AZ)
+* 1 Internet gateway (IGW)
+* 1 NAT gateway
+* 2 Public route tables (1 for each AZ)
+* 2 Private route tables (1 for each AZ)
+* 2 Security groups (Allowing SSL)
+-----------------------------------------------
+* 1 Launch template for the web servers
+* 2 Target groups (1 for the public web servers and 1 for the private web servers)
+* 1 Application load balancer (ALB)
+* 1 Autoscaling group for the web servers
 
 ### Whats steps do we take?
-* Create a Terraform configuration file for each region.
-* Initialize Terraform.
-* Plan the deployment.
-* Apply the deployment.
-* Verify the deployment.
+* Create Terraform configuration file in VSC
+* Plan the deployment for us-west-1
+* Create the required terraform modules
+* Apply the deployment
+* Verify the deployment
 
 ## Prerequisites
-> Just like in our previous tutorials, we need to make sure our prerequisites are met!
-
+Ensure that you have the following:
 * AWS account
 * Terraform installed
 * Git client installed
+* Github Account
 * [Forked GitHub Repository](https://github.com/malguswaf/class5)
 * VSC Up and running with new project folder ready to go!
+
+# Modules
 
 ### 1. Authentication
 > Betore we do anything else, we should ensure that our account is authenticated!
@@ -584,7 +558,7 @@ terraform init
 terraform plan
 terraform apply
 ```  
-### 10.Target group**
+### 10. Target group**
 ```
 resource "aws_lb_target_group" "app1_tg" {
   name     = "app1-target-group"
@@ -645,7 +619,7 @@ terraform init
 terraform plan
 terraform apply
 ```
-### 11.Load Balancer/**
+### 11. Load Balancer/**
 ```
 resource "aws_lb" "app1_alb" {
   name               = "app1-load-balancer"
@@ -668,7 +642,7 @@ resource "aws_lb" "app1_alb" {
   }
 }
 ```
-### 12.Autoscaling Group**
+### 12. Autoscaling Group**
 ```  
 resource "aws_autoscaling_group" "app1_asg" {
   name_prefix           = "app1-auto-scaling-group-"
