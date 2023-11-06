@@ -43,11 +43,6 @@ Steps:
 9. Verify the deployment.
 
 
-
-
-
-
-
 ### What do we need? 
 * VPC: This would be our logically isolated porton of AWS cloud real estate where you can launch AWS resources in a private network.
 * Subnet: A subnet is a division of a VPC. Subnets is simply a range of IP addresses.  Your basically dividing your VPC into smaller networks
@@ -74,10 +69,10 @@ Steps:
 * [Forked GitHub Repository](https://github.com/malguswaf/class5)
 * VSC Up and running with new project folder ready to go!
 
-### Authentication
+### 1. Authentication
 > Betore we do anything else, we should ensure that our account is authenticated!
 
-    1. Create the first of two directories. The first will be called " 
+    1. Create the first of two directories. (our region will be "us-west-1") 
     2. Create a new file called `0-Auth.tf` in your project directory.
     3. Copy and paste the code from the `0-Auth.tf` file in the forked "class5" repository.
     4. Make the following adjustments to the code:
@@ -86,315 +81,670 @@ Steps:
         * Add your desired tags.
         * At this point "SAVE" (Ctrl-S) your file!
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```
-
-module "vpc" {
-  source = "hashicorp/aws/vpc"
-  version = "~> 3.4"
-
-  name = "my-vpc"
-  cidr = "10.0.0.0/16"
-
-  azs = ["us-west-1a", "us-west-1b", "us-west-1c", "us-west-1d"]
-
-  tags = {
-    Name = "my-vpc"
-    Environment = "production"
-  }
-}
-
-module "public_subnets" {
-  source = "hashicorp/aws/subnet"
-  version = "~> 3.4"
-
-  for_each = var.public_subnets
-
-  vpc_id = module.vpc.vpc_id
-  cidr_block = each.value
-  availability_zone = each.key
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = each.key
-    Environment = "production"
-  }
-}
-
-module "private_subnets" {
-  source = "hashicorp/aws/subnet"
-  version = "~> 3.4"
-
-  for_each = var.private_subnets
-
-  vpc_id = module.vpc.vpc_id
-  cidr_block = each.value
-  availability_zone = each.key
-
-  tags = {
-    Name = each.key
-    Environment = "production"
-  }
-}
-
-module "internet_gateway" {
-  source = "hashicorp/aws/internet_gateway"
-  version = "~> 3.4"
-
-  vpc_id = module.vpc.vpc_id
-
-  tags = {
-    Name = "my-igw"
-    Environment = "production"
-  }
-}
-
-module "nat_gateway" {
-  source = "hashicorp/aws/nat_gateway"
-  version = "~> 3.4"
-
-  allocation_id = var.nat_gateway_allocation_id
-  subnet_id = module.public_subnets[0].id
-
-  tags = {
-    Name = "my-nat"
-    Environment = "production"
-  }
-
-  depends_on = [
-    module.internet_gateway,
-  ]
-}
-
-module "route_tables" {
-  source = "hashicorp/aws/route_table"
-  version = "~> 3.4"
-
-  vpc_id = module.vpc.vpc_id
-
-  public_route_table = {
-    name = "my-public-route-table"
-    route = [
-      {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = module.internet_gateway.id
-      }
-    ]
-  }
-
-  private_route_table = {
-    name = "my-private-route-table"
-    route = [
-      {
-        cidr_block = "0.0.0.0/0"
-        nat_gateway_id = module.nat_gateway.id
-      }
-    ]
-  }
-}
-
-module "route_table_associations" {
-  source = "hashicorp/aws/route_table_association"
-  version = "~> 3.4"
-
-  for_each = var.route_table_associations
-
-  subnet_id = each.key
-  route_table_id = each.value
-}
-
-module "security_groups" {
-  source = "hashicorp/aws/security_group"
-  version = "~> 3.4"
-
-  web_server_sg = {
-    name = "my-web-server-sg"
-    description = "Security group for web servers"
-    vpc_id = module.vpc.vpc_id
-
-    ingress = [
-      {
-        description = "HTTP"
-        from_port = 80
-        to_port = 80
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-      },
-      {
-        description = "HTTPS"
-        from_port = 443
-        to_port = 443
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-      }
-    ]
-
-    egress = [
-      {
-
-      ```
-
-
-````
-### Components
+  Here is our **"0-Auth.tf"** code:
 ```
 provider "aws" {
   region = "us-west-1"
 }
 
-resource "aws_vpc" "my_vpc" {
-  cidr_block = "10.0.0.0/16"
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+```  
+Once you have pasted the code run the following terrrafor terminal commands:
+```
+terraform init
+terraform plan
+terraform apply
+```
+### 2. VPC (Virtual Private Cloud)**
+1. Create a new file called `1-VPC.tf` in your project directory.
+2. Copy and paste the following code into the file:
+```  
+resource "aws_vpc" "app1" {
+  cidr_block           = "10.32.0.0/16"
+  enable_dns_support   = true  # Enable DNS support
+  enable_dns_hostnames = true  # Enable DNS hostnames
 
   tags = {
-    Name = "my-vpc"
-    Environment = "production"
+    Name    = "app1"
+    Service = "application1"
+    Owner   = "Chewbacca"
+    Planet  = "Mustafar"
+  }
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id       = aws_vpc.app1.id
+  service_name = "com.amazonaws.us-west-1.s3"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = [
+    aws_route_table.private.id,
+    aws_route_table.public.id
+  ]
+
+  tags = {
+    Name    = "app1_s3_endpoint"
+    Service = "application1"
+    Owner   = "Chewbacca"
+    Planet  = "Mustafar"
+  }
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id       = aws_vpc.app1.id
+  service_name = "com.amazonaws.us-west-1.s3"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = [
+    aws_route_table.private.id,
+    aws_route_table.public.id
+  ]
+
+  tags = {
+    Name    = "app1_s3_endpoint"
+    Service = "application1"
+    Owner   = "Chewbacca"
+    Planet  = "Mustafar"
+  }
+}
+
+```
+Once you have pasted the code run the following terrrafor terminal commands:
+```
+terraform init
+terraform plan
+terraform apply
+``` 
+### 3. Subnet**
+
+  # Public Subnets
+```
+  resource "aws_subnet" "public_us_west_1a" {
+    vpc_id                  = aws_vpc.app1.id
+    cidr_block              = "10.32.1.0/24"
+    availability_zone       = "us-west-1a"
+    map_public_ip_on_launch = true
+
+    tags = {
+      Name    = "public-us-west-1a"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+
+  resource "aws_subnet" "public_us_west_1b" {
+    vpc_id                  = aws_vpc.app1.id
+    cidr_block              = "10.32.2.0/24"
+    availability_zone       = "us-west-1b"
+    map_public_ip_on_launch = true
+
+    tags = {
+      Name    = "public-us-west-1b"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+
+    resource "aws_subnet" "public_us_west_1c" {
+    vpc_id                  = aws_vpc.app1.id
+    cidr_block              = "10.32.3.0/24"
+    availability_zone       = "us-west-1c"
+    map_public_ip_on_launch = true
+
+    tags = {
+      Name    = "public-us-west-1c"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+
+    resource "aws_subnet" "public_us_west_1d" {
+    vpc_id                  = aws_vpc.app1.id
+    cidr_block              = "10.32.4.0/24"
+    availability_zone       = "us-west-1d"
+    map_public_ip_on_launch = true
+
+    tags = {
+      Name    = "public-us-west-1d"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+
+  # Private Subnets
+  resource "aws_subnet" "private_us_west_1a" {
+    vpc_id            = aws_vpc.app1.id
+    cidr_block        = "10.32.11.0/24"
+    availability_zone = "us-west-1a"
+
+    tags = {
+      Name    = "private-us-west-1a"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+
+  resource "aws_subnet" "private_us_west_1b" {
+    vpc_id            = aws_vpc.app1.id
+    cidr_block        = "10.32.12.0/24"
+    availability_zone = "us-west-1b"
+
+    tags = {
+      Name    = "private-us-west-1b"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+
+    resource "aws_subnet" "private_us_west_1c" {
+    vpc_id            = aws_vpc.app1.id
+    cidr_block        = "10.32.13.0/24"
+    availability_zone = "us-west-1c"
+
+    tags = {
+      Name    = "private-us-west-1c"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+
+      resource "aws_subnet" "private_us_west_1d" {
+    vpc_id            = aws_vpc.app1.id
+    cidr_block        = "10.32.14.0/24"
+    availability_zone = "us-west-1d"
+
+    tags = {
+      Name    = "private-us-west-1d"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+```
+Once you have pasted the code run the following terrrafor terminal commands:
+```
+terraform init
+terraform plan
+terraform apply
+```  
+### 4. Internet gateway (IGW)**
+```  
+resource "aws_internet_gateway" "app1_igw" {
+  vpc_id = aws_vpc.app1.id
+
+  tags = {
+    Name = "app1_IGW01"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
   }
 }
 ```
-### Create public subnets
+Once you have pasted the code run the following terrraform terminal commands:
 ```
-resource "aws_subnet" "public_subnet_1a" {
-  vpc_id = aws_vpc.my_vpc.id
-  cidr_block = "10.0.1.0/24"
-  availability_zone = "us-west-1a"
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = "public-subnet-1a"
-    Environment = "production"
-  }
-}
+terraform init
+terraform plan
+terraform apply
+```  
+### 5. NAT**
 ```
-### ... Create public subnets for 1b, 1c, and 1d
-
-### Create private subnets
-```
-resource "aws_subnet" "private_subnet_1a" {
-  vpc_id = aws_vpc.my_vpc.id
-  cidr_block = "10.0.10.0/24"
-  availability_zone = "us-west-1a"
-
-  tags = {
-    Name = "private-subnet-1a"
-    Environment = "production"
-  }
-}
-```
-### ... Create private subnets for 1b, 1c, and 1d
-
-### Create an internet gateway
-```
-resource "aws_internet_gateway" "my_igw" {
-  vpc_id = aws_vpc.my_vpc.id
-
-  tags = {
-    Name = "my-igw"
-    Environment = "production"
-  }
-}
-```
-### Create a NAT gateway
-```
-resource "aws_nat_gateway" "my_nat_gateway" {
-  allocation_id = aws_eip.my_nat_eip.id
-  subnet_id = aws_subnet.public_subnet_1a.id
-
-  tags = {
-    Name = "my-nat_gateway"
-    Environment = "production"
-  }
-}
-```
-### Create an EIP for the NAT gateway
-```
-resource "aws_eip" "my_nat_eip" {
+resource "aws_eip" "nat" {
+#  description = "nat"
   vpc = true
+
+  tags = {
+    Name = "nat"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
+  }
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat.id
+  subnet_id = aws_subnet.public_us_west_1a.id
+  tags = {
+    Name = "nat"
+    Service = "application1"
+    Owner = "Chewbacca"
+    Planet = "Musafar"
+  }
+}
+
+```
+Once you have pasted the code run the following terrraform terminal commands:
+```
+terraform init
+terraform plan
+terraform apply
+```  
+### 6. Route Tables**
+```
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.app1.id
+
+   route = [
+    {
+      cidr_block                 = "0.0.0.0/0"
+      nat_gateway_id             = aws_nat_gateway.nat.id
+      carrier_gateway_id         = ""
+      destination_prefix_list_id = ""
+      egress_only_gateway_id     = ""
+      gateway_id                 = ""
+      instance_id                = ""
+      ipv6_cidr_block            = ""
+      local_gateway_id           = ""
+      network_interface_id       = ""
+      transit_gateway_id         = ""
+      vpc_endpoint_id            = ""
+      vpc_peering_connection_id  = ""
+    },
+  ]
+
+  tags = {
+    Name = "private"
+  }
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.app1.id
+
+  route = [
+    {
+      cidr_block                 = "0.0.0.0/0"
+      gateway_id                 = aws_internet_gateway.app1_igw.id
+      nat_gateway_id             = ""
+      carrier_gateway_id         = ""
+      destination_prefix_list_id = ""
+      egress_only_gateway_id     = ""
+      instance_id                = ""
+      ipv6_cidr_block            = ""
+      local_gateway_id           = ""
+      network_interface_id       = ""
+      transit_gateway_id         = ""
+      vpc_endpoint_id            = ""
+      vpc_peering_connection_id  = ""
+    },
+  ]
+
+  tags = {
+    Name = "public"
+  }
+}
+
+# Route Table Associations
+resource "aws_route_table_association" "private_us_east_1a" {
+  subnet_id      = aws_subnet.private_us_east_1a.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_us_east_1b" {
+  subnet_id      = aws_subnet.private_us_east_1b.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_us_east_1c" {
+  subnet_id      = aws_subnet.private_us_east_1c.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "public_us_east_1a" {
+  subnet_id      = aws_subnet.public_us_east_1a.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public_us_east_1b" {
+  subnet_id      = aws_subnet.public_us_east_1b.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public_us_east_1c" {
+  subnet_id      = aws_subnet.public_us_east_1c.id
+  route_table_id = aws_route_table.public.id
 }
 ```
-### Create public route tables
+Once you have pasted the code run the following terrraform terminal commands:
 ```
-resource "aws_route_table" "public_route_table_1a" {
-  vpc_id = aws_vpc.my_vpc.id
+terraform init
+terraform plan
+terraform apply
+```  
+### 7. Security group for VPC**
+```
+resource "aws_security_group" "app1_sg01_servers" {
+  name        = "app1_sg01_server"
+  description = "app1_sg01_server"
+  vpc_id      = aws_vpc.app1.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.my_igw.id
+  ingress {
+    description = "MyHomePage"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+   ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "public-route-table-1a"
-    Environment = "production"
+    Name    = "app1_sg01_server"
+    Service = "application1"
+    Owner   = "Chewbacca"
+    Planet  = "Mustafar"
   }
 }
-```
-#### ... Create public route tables for 1b, 1c, and 1d
 
-### Create private route tables
 ```
-resource "aws_route_table" "private_route_table_1a" {
-  vpc_id = aws_vpc.my_vpc.id
+Once you have pasted the code run the following terrraform terminal commands:
+```
+terraform init
+terraform plan
+terraform apply
+``` 
+### 8. Security Group for Application Load Balancer**
+```
+resource "aws_security_group" "app1_sg02_LB01" {
+  name        = "app1_sg02_LB01"
+  description = "app1_sg02_LB01"
+  vpc_id      = aws_vpc.app1.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.my_nat_gateway.id
+  ingress {
+    description = "LBExternal"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "private-route-table-1a"
-    Environment = "production"
+    Name    = "app1_sg02_LB01"
+    Service = "application1"
+    Owner   = "Chewbacca"
+    Planet  = "Mustafar"
   }
 }
 ```
-### ... Create private route tables for 1b, 1c, and 1d
-
-### Create a security group for the web servers in the public subnet
+Once you have pasted the code run the following terrraform terminal commands:
 ```
-resource "aws_security_group" "public_web_servers_sg" {
-  name = "public-web-servers-sg"
-  description = "Security group for web servers in the public subnet"
-  ingress = [{
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
-    cidr_blocks = ["10.0.1.0/24"]
-  }]
+terraform init
+terraform plan
+terraform apply
+```  
+### 9. Launch Template**
+```
+resource "aws_launch_template" "app1_LT" {
+  name_prefix   = "app1_LT"
+  image_id      = "ami-05c13eab67c5d8861"
+  instance_type = "t2.micro"
+
+  #key_name = "form"
+
+  vpc_security_group_ids = [aws_security_group.app1_sg01_servers.id]
+
+  user_data = base64encode(<<-EOF
+    #!/bin/bash
+    yum update -y
+    yum install -y httpd
+    systemctl start httpd
+    systemctl enable httpd
+
+    # Get the IMDSv2 token
+    TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+
+    # Background the curl requests
+    curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/local-ipv4 &> /tmp/local_ipv4 &
+    curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/placement/availability-zone &> /tmp/az &
+    curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/network/interfaces/macs/ &> /tmp/macid &
+    wait
+
+    macid=$(cat /tmp/macid)
+    local_ipv4=$(cat /tmp/local_ipv4)
+    az=$(cat /tmp/az)
+    vpc=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/network/interfaces/macs/$macid/vpc-id)
+
+    # Create HTML file
+    cat <<-HTML > /var/www/html/index.html
+    <!doctype html>
+    <html lang="en" class="h-100">
+    <head>
+    <title>Details for EC2 instance</title>
+    </head>
+    <body>
+    <div>
+    <h1>AWS Instance Details</h1>
+    <h1>Samurai Katana</h1>
+    <p><b>Instance Name:</b> $(hostname -f) </p>
+    <p><b>Instance Private Ip Address: </b> $local_ipv4</p>
+    <p><b>Availability Zone: </b> $az</p>
+    <p><b>Virtual Private Cloud (VPC):</b> $vpc</p>
+    </div>
+    </body>
+    </html>
+    HTML
+
+    # Clean up the temp files
+    rm -f /tmp/local_ipv4 /tmp/az /tmp/macid
+  EOF
+  )
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name    = "app1_LT"
+      Service = "application1"
+      Owner   = "Chewbacca"
+      Planet  = "Mustafar"
+    }
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+```
+Once you have pasted the code run the following terrraform terminal commands:
+```
+terraform init
+terraform plan
+terraform apply
+```  
+### 10.Target group**
+```
+resource "aws_lb_target_group" "app1_tg" {
+  name     = "app1-target-group"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.app1.id
+  target_type = "instance"
+
+  health_check {
+    enabled             = true
+    interval            = 30
+    path                = "/"
+    protocol            = "HTTP"
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+    timeout             = 5
+    matcher             = "200"
+  }
+
+  tags = {
+    Name    = "App1TargetGroup"
+    Service = "App1"
+    Owner   = "User"
+    Project = "Web Service"
+  }
+}
+
+resource "aws_lb_target_group" "app1_tg_https" {
+  name     = "app1-target-group-https"
+  port     = 443
+  protocol = "HTTPS"
+  vpc_id   = aws_vpc.app1.id
+  target_type = "instance"
+
+  health_check {
+    enabled             = true
+    interval            = 30
+    path                = "/"
+    protocol            = "HTTPS"
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+    timeout             = 5
+    matcher             = "200"
+  }
+
+  tags = {
+    Name    = "App1TargetGroupHTTPS"
+    Service = "App1"
+    Owner   = "User"
+    Project = "Web Service"
+  }
+}
+
+```
+Once you have pasted the code run the following terrraform terminal commands:
+```
+terraform init
+terraform plan
+terraform apply
+```
+### 11.Load Balancer/**
+```
+resource "aws_lb" "app1_alb" {
+  name               = "app1-load-balancer"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.app1_sg02_LB01.id]
+  subnets            = [
+    aws_subnet.public_us_west_1a.id,
+    aws_subnet.public_us_west_1b.id,
+    aws_subnet.public_us_west_1c.id,
+    aws_subnet.public_us_west_1d.id
+  ]
+  enable_deletion_protection = false
+
+  tags = {
+    Name    = "App1LoadBalancer"
+    Service = "App1"
+    Owner   = "User"
+    Project = "Web Service"
+  }
 }
 ```
-### Create a security group for the web servers in the private subnet
+### 12.Autoscaling Group**
+```  
+resource "aws_autoscaling_group" "app1_asg" {
+  name_prefix           = "app1-auto-scaling-group-"
+  min_size              = 3
+  max_size              = 15
+  desired_capacity      = 6
+  vpc_zone_identifier   = [
+    aws_subnet.private_us_west_1a.id,
+    aws_subnet.private_us_west_1b.id,
+    aws_subnet.private_us_west_1c.id
+    aws_subnet.private_us_west_1d.id
+  ]
+  health_check_type          = "ELB"
+  health_check_grace_period  = 300
+  force_delete               = true
+  target_group_arns          = [aws_lb_target_group.app1_tg.arn]
+
+  launch_template {
+    id      = aws_launch_template.app1_LT.id
+    version = "$Latest"
+  }
+
+  enabled_metrics = ["GroupMinSize", "GroupMaxSize", "GroupDesiredCapacity", "GroupInServiceInstances", "GroupTotalInstances"]
+
+  # Instance protection for launching
+  initial_lifecycle_hook {
+    name                  = "instance-protection-launch"
+    lifecycle_transition  = "autoscaling:EC2_INSTANCE_LAUNCHING"
+    default_result        = "CONTINUE"
+    heartbeat_timeout     = 60
+    notification_metadata = "{\"key\":\"value\"}"
+  }
+
+  # Instance protection for terminating
+  initial_lifecycle_hook {
+    name                  = "scale-in-protection"
+    lifecycle_transition  = "autoscaling:EC2_INSTANCE_TERMINATING"
+    default_result        = "CONTINUE"
+    heartbeat_timeout     = 300
+  }
+
+  tag {
+    key                 = "Name"
+    value               = "app1-instance"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Environment"
+    value               = "Production"
+    propagate_at_launch = true
+  }
+}
+
+# Auto Scaling Policy
+resource "aws_autoscaling_policy" "app1_scaling_policy" {
+  name                   = "app1-cpu-target"
+  autoscaling_group_name = aws_autoscaling_group.app1_asg.name
+
+  policy_type = "TargetTrackingScaling"
+  estimated_instance_warmup = 120
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 75.0
+  }
+}
+
 ```
-resource "aws_security_group" "private_web_servers_sg" {
-  name = "private_web_servers-sg"
-  description = "Security group for web servers in the private
-````
+Once you have pasted the code run the following terrraform terminal commands:
+```
+terraform init
+terraform plan
+terraform apply
+```
 
 
