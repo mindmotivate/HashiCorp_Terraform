@@ -8,8 +8,10 @@ IGW
 Route Tables 
 ....and maybe something more
 
-*For the purposes of this project we will assume:*
-***Application Load Balancer, Launch Template, Target Group, Autoscaling Group potetnially...***
+*For the purposes of this project we will consider:*
+***Application Load Balancer, Launch Template, Target Group, Autoscaling Group, Endpoint for a future service like an S3 Bucket perhaps...***<br>
+<br>
+Keep in mind we were not given specific instructions so feel free to add whatever features you would like!
 
 ### What components do we need to complete this task? 
 * **VPC (Virtual Private Cloud)**: This would be our logically isolated porton of AWS cloud real estate where you can launch AWS resources in a private network.
@@ -44,34 +46,35 @@ Route Tables
     * Autoscaling groups can help you maintain performance and availability for your applications.
 
 ### Whats steps do we take?
-* Create a Terraform configuration file for each region.
-* Initialize Terraform.
-* Plan the deployment.
-* Apply the deployment.
-* Verify the deployment.
+* Determine our desired region
+* Create a corresponding Terraform configuration file in VSC
+* Plan the deployment
+* Create the required terraform modules
+* Apply the deployment
+* Verify the deployment
 
 ## Prerequisites
-> Just like in Part 1 of our previous tutorials, we need to make sure our prerequisites are met!
-
+> Just like in Part 1 of our previous tutorial, we need to make sure our prerequisites are met! <br>
+Ensure that you have the following:
 * AWS account
 * Terraform installed
 * Git client installed
+* Github Account
 * [Forked GitHub Repository](https://github.com/malguswaf/class5)
 * VSC Up and running with new project folder ready to go!
 
 ### 1. Choose your region and Authenticate!<br>
 > Before you proceed, ensure that your account is authenticated!<br>
-
-  1. Create your region 2 directory. (our 2nd region will be "us-east-1")  
-  2. Create a new file called `0-Auth.tf` in your project directory.
-  3. Copy and paste the code from the `0-Auth.tf` file in the forked "class5" repository.
-  4. Make the following adjustments to the code:
-        * Specify region = "us-east-1" 
-        * Specifcy that this is the same region which your AWS console is situated in)*
-        * Add your desired tags.
-        * At this point "SAVE" (Ctrl-S) your file!
-    
-  Here is our **"0-Auth.tf"** code:
+  1. Create your region 2 directory. (our 2nd region will be "us-east-1") <br>
+  2. Create a new file called `0-Auth.tf` in your project directory. <br>
+  3. Copy and paste the code from the `0-Auth.tf` file in the forked "class5" repository.<br>
+  4. Make the following adjustments to the code:<br>
+        * Specify region = "us-east-1" <br>
+        * Specifcy that this is the same region which your AWS console is situated in!*<br>
+        * Add your desired tags.<br>
+        * At this point "SAVE" (Ctrl-S) your file!<br>
+    <br>
+Here is our **"0-Auth.tf"** code:
 ```
 provider "aws" {
   region = "us-east-1"
@@ -86,7 +89,7 @@ terraform {
   }
 }
 ```  
-Once you have pasted the code run the following terrrafor terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -94,10 +97,15 @@ terraform apply
 ```
 ### 2. VPC (Virtual Private Cloud)**
 1. Create a new file called `1-VPC.tf` in your project directory.
-2. Copy and paste the following code into the file:
+2. Copy and paste the VPC code from the forked "class5" repository.<br>
+3. Since we will be selecting N. Virginia as our region, our CIDR will reflect such.
+4. Ensure your CIDR range is: 10.36.0.0/16 (you may select another cidr range jsut make sure it does not overlap with your first region)
+5. *Note: We chose to go with an S3 endpoint as our extra item (please ensure th at it is associated with the vpc as well)
+6. Add your desired tags.<br>
+7. "SAVE" (Ctrl-S) your file!<br>
 ```  
 resource "aws_vpc" "app1" {
-  cidr_block           = "10.32.0.0/16"
+  cidr_block           = "10.36.0.0/16"
   enable_dns_support   = true  # Enable DNS support
   enable_dns_hostnames = true  # Enable DNS hostnames
 
@@ -128,20 +136,23 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 ```
-Once you have pasted the code run the following terrrafor terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
 terraform apply
 ``` 
 ### 3. Subnet**
-1. Create a new file called `1-VPC.tf` in your project directory.
-2. Copy and paste the following code into the file:
+1. Create a new file called `2-Subnets.tf` in your project directory.<br>
+2. Copy and paste the Subnet code from the forked "class5" repository.<br>
+3. *Note: We will be creating both our Public & Private subnets in this module, so ensure you have both!
+4. Add your desired tags.<br>
+5. "SAVE" (Ctrl-S) your file!<br>
 ```  
   # Public Subnets
   resource "aws_subnet" "public_us_east_1a" {
     vpc_id                  = aws_vpc.app1.id
-    cidr_block              = "10.32.1.0/24"
+    cidr_block              = "10.36.1.0/24"
     availability_zone       = "us-east-1a"
     map_public_ip_on_launch = true
 
@@ -155,7 +166,7 @@ terraform apply
 
   resource "aws_subnet" "public_us_east_1b" {
     vpc_id                  = aws_vpc.app1.id
-    cidr_block              = "10.32.2.0/24"
+    cidr_block              = "10.36.2.0/24"
     availability_zone       = "us-east-1b"
     map_public_ip_on_launch = true
 
@@ -169,7 +180,7 @@ terraform apply
 
     resource "aws_subnet" "public_us_east_1c" {
     vpc_id                  = aws_vpc.app1.id
-    cidr_block              = "10.32.3.0/24"
+    cidr_block              = "10.36.3.0/24"
     availability_zone       = "us-east-1c"
     map_public_ip_on_launch = true
 
@@ -184,7 +195,7 @@ terraform apply
   # Private Subnets
   resource "aws_subnet" "private_us_east_1a" {
     vpc_id            = aws_vpc.app1.id
-    cidr_block        = "10.32.11.0/24"
+    cidr_block        = "10.36.11.0/24"
     availability_zone = "us-east-1a"
 
     tags = {
@@ -197,7 +208,7 @@ terraform apply
 
   resource "aws_subnet" "private_us_east_1b" {
     vpc_id            = aws_vpc.app1.id
-    cidr_block        = "10.32.12.0/24"
+    cidr_block        = "10.36.12.0/24"
     availability_zone = "us-east-1b"
 
     tags = {
@@ -210,7 +221,7 @@ terraform apply
 
     resource "aws_subnet" "private_us_east_1c" {
     vpc_id            = aws_vpc.app1.id
-    cidr_block        = "10.32.13.0/24"
+    cidr_block        = "10.36.13.0/24"
     availability_zone = "us-east-1c"
 
     tags = {
@@ -221,13 +232,19 @@ terraform apply
     }
   }
 ```
-Once you have pasted the code run the following terrrafor terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
 terraform apply
 ```  
 ### 4. Internet gateway (IGW)**
+1. Create a new file called `3-IGW.tf` in your project directory.<br>
+2. Copy and paste the IGW code from the forked "class5" repository.<br>
+3. *Note: This will allow for our VPC to communicate with the Internet so ensure that it is assciated with the VPC id
+4. Add your desired tags.<br>
+5. "SAVE" (Ctrl-S) your file!<br>
+
 ```  
 resource "aws_internet_gateway" "app1_igw" {
   vpc_id = aws_vpc.app1.id
@@ -240,13 +257,18 @@ resource "aws_internet_gateway" "app1_igw" {
   }
 }
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
 terraform apply
 ```  
 ### 5. NAT**
+1. Create a new file called `4-NAT.tf` in your project directory.<br>
+2. Copy and paste the NAT code from the forked "class5" repository.<br>
+3. *Note: This will allow our Private subnet to communicate with the Internet by translating to a Public IP so ensure that it is assciated with the "Public" subnet id
+4. Add your desired tags.<br>
+5. "SAVE" (Ctrl-S) your file!<br>
 ```
 resource "aws_eip" "nat" {
 #  description = "nat"
@@ -273,13 +295,18 @@ resource "aws_nat_gateway" "nat" {
   depends_on = [aws_internet_gateway.app1_igw]
 }
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
 terraform apply
 ```  
 ### 6. Route Tables**
+1. Create a new file called `5-Routed.tf` in your project directory.<br>
+2. Copy and paste the Route code from the forked "class5" repository.<br>
+3. *Note: The route table provides intructions regarding how traffic is routed.<br>
+4. Add your desired tags.<br>
+5. "SAVE" (Ctrl-S) your file!<br>
 ```
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.app1.id
@@ -365,13 +392,19 @@ resource "aws_route_table_association" "public_us_east_1c" {
   route_table_id = aws_route_table.public.id
 }
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
 terraform apply
 ```  
 ### 7. Security group for VPC**
+1. Create a new file called `6-SG.tf` in your project directory.<br>
+2. We will have to do a bit of digging to find resource. You may use the following reference: (https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group)
+3. Alter the provided registry code to consider traffic from HTTP, SSH & RDP sources
+4. *Note: The security group is specifically fro the LB and will only HTTP ingress traffic<br>
+5. Add your desired tags.<br>
+6. "SAVE" (Ctrl-S) your file!<br>
 ```
 resource "aws_security_group" "app1_sg01_servers" {
   name        = "app1_sg01_server"
@@ -402,8 +435,6 @@ resource "aws_security_group" "app1_sg01_servers" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -419,15 +450,20 @@ resource "aws_security_group" "app1_sg01_servers" {
   }
 }
 
-
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
 terraform apply
 ``` 
 ### 8. Security Group for Application Load Balancer**
+1. Create a new file called `7-LBSG.tf` in your project directory.<br>
+2. You may use the following documentation: (https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group)
+(https://registry.terraform.io/modules/terraform-aws-modules/alb/aws/latest)<br> 
+5. *Note: Alter the code as necessary and provide the appropriate ingress rule via port 80. The security group is specifically fro the LB and will only consider HTTP ingress traffic<br>
+6. Add your desired tags.<br>
+7. "SAVE" (Ctrl-S) your file!<br>>
 ```
 resource "aws_security_group" "app1_sg02_LB01" {
   name        = "app1_sg02_LB01"
@@ -457,7 +493,7 @@ resource "aws_security_group" "app1_sg02_LB01" {
   }
 }
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -536,7 +572,7 @@ resource "aws_launch_template" "app1_LT" {
 }
 
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -570,7 +606,7 @@ resource "aws_lb_target_group" "app1_tg" {
   }
 } 
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -609,7 +645,7 @@ resource "aws_lb_listener" "http" {
   }
 }
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -687,7 +723,7 @@ resource "aws_autoscaling_policy" "app1_scaling_policy" {
 }
 
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted and saved your code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
