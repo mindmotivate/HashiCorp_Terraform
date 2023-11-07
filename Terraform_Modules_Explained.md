@@ -24,6 +24,12 @@ To use the module, you would simply need to add it to your Terraform configurati
 
 To put it bluntly, using pre-built Terraform modules, you can create infrastructure more efficiently and with fewer errors.
 
+
+![OIG](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/739e942c-0bff-4c33-81e1-6234d01cecf9)
+![OIG mPGrulKMT](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/353971a4-075d-4d35-916c-0bc6db593b40)
+![OIG](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/9598a928-9a97-4ea0-920b-32b12a26febb)
+
+
 ## Top 3 Benefits of using modules in AWS Terraform!
 
 If i had to narrow the field down to 3, I would include:
