@@ -1,3 +1,6 @@
+
+![Oregon-US-WEST-2 drawio](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/b08f3878-3267-4504-90ad-ec16bad6d38d)
+
 # Tale Of Two Regions Part 1
 
 > This project will require us to create a 2-region AWS deployment<br>The first region we will outline is Oregon (us-west-2)
