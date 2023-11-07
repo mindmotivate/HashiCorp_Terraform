@@ -1,10 +1,10 @@
 # Tale Of Two Regions Part 1
 
-> This project will require us to create a 2-region AWS deployment<br>The first region we will outline is Oregon (us-west-1)
+> This project will require us to create a 2-region AWS deployment<br>The first region we will outline is Oregon (us-west-2)
 
 ***It will be configured with the following requirements:***
-* 4 availability zones
-* SSL
+* 4 Availability Zones
+* SSL Enabled
 * 2 Target Groups
 
 ***We will execute this architecture using the following Terraform modules:***
@@ -12,28 +12,29 @@
 ### Modules List:
 
 * VPC (Virtual Private Cloud)
-* 4 Public subnets (1 for each AZ)
-* 4 Private subnets (1 for each AZ)
-* 1 Internet gateway (IGW)
-* 1 NAT gateway
-* 2 Public route tables (1 for each AZ)
-* 2 Private route tables (1 for each AZ)
-* 2 Security groups (Allowing SSL)
+* Public subnet (1 for each of 4 AZs)
+* Private subnets (1 for each of 4AZs)
+* Internet gateway (IGW)
+* NAT gateway
+* Route tableS
+* Security group (Allowing SSL)
+* 2 Target Groups
 -----------------------------------------------
-* 1 Launch template for the web servers
-* 2 Target groups (1 for the public web servers and 1 for the private web servers)
-* 1 Application load balancer (ALB)
-* 1 Autoscaling group for the web servers
+
+### * These "add-ons" are not required *
+* Launch template (for potential servers)
+* Application load balancer (for potential infrastructure expansion)
+* Autoscaling group (for potential web servers)
 
 ### Whats steps do we take?
 * Create Terraform configuration file in VSC
-* Plan the deployment for us-west-1
+* Plan the deployment, specifiying us-west-2
 * Create the required terraform modules
 * Apply the deployment
-* Verify the deployment
-
+* Verify the deployment in AWS console
+   
 ## Prerequisites
-Ensure that you have the following:
+Ensure that you have the following items first:
 
 * AWS account
 * Terraform installed
@@ -57,7 +58,7 @@ Ensure that you have the following:
 
 ---------------------------------------------
 
-  Here is our **"0-Auth.tf"** code:
+Here is our **"0-Auth.tf"** code:
 ```
 provider "aws" {
   region = "us-west-2"
@@ -72,7 +73,7 @@ terraform {
   }
 }
 ```  
-Once you have pasted the code run the following terrrafor terminal commands:
+Once you have pasted the code run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -132,7 +133,7 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 ```
-Once you have pasted the code run the following terrrafor terminal commands:
+Once you have properly configured the code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -251,7 +252,7 @@ terraform apply
     }
   }
 ```
-Once you have pasted the code run the following terrrafor terminal commands:
+Once you have properly configured the code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -270,7 +271,7 @@ resource "aws_internet_gateway" "app1_igw" {
   }
 }
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have properly configured the code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -302,7 +303,7 @@ resource "aws_nat_gateway" "nat" {
 }
 
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have properly configured the code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -393,7 +394,7 @@ resource "aws_route_table_association" "public_us_east_1c" {
   route_table_id = aws_route_table.public.id
 }
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have properly configured the code, run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -438,7 +439,7 @@ resource "aws_security_group" "app1_sg01_servers" {
 }
 
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted the code run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -474,7 +475,7 @@ resource "aws_security_group" "app1_sg02_LB01" {
   }
 }
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted the code run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -554,7 +555,7 @@ resource "aws_launch_template" "app1_LT" {
 
 
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted the code run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -615,7 +616,7 @@ resource "aws_lb_target_group" "app1_tg_https" {
 }
 
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted the code run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -716,7 +717,7 @@ resource "aws_autoscaling_policy" "app1_scaling_policy" {
 }
 
 ```
-Once you have pasted the code run the following terrraform terminal commands:
+Once you have pasted the code run the following terraform terminal commands:
 ```
 terraform init
 terraform plan
@@ -724,3 +725,13 @@ terraform apply
 ```
 
 ## Successful Deployment Images:
+
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_1.JPG">
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_2.JPG">
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_3.JPG">
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_4.JPG">
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_5.JPG">
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_6.JPG">
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_7.JPG">
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_8.JPG">
+<img src= "https://raw.githubusercontent.com/mindmotivate/HashiCorp_Terraform/gh-pages-deployment/oregon_9.JPG">
