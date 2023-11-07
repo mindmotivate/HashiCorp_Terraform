@@ -2,6 +2,7 @@
 ![image](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/3e81ac10-669f-4c5c-850e-00d3ee103b48)
 ![OIG ANG_F0tCuUWhc](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/e7a6e1df-35e1-4754-97d4-dbb3f8fc73a5)
 ![OIG](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/d6f98125-6bb4-4d7c-8907-2936af75045f)
+ <img src="https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/77ea6eea-73e3-47cd-ad26-743eed6f0f83" width="15%" height="15%">
 
 ## Terraform Modules
 
