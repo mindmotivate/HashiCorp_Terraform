@@ -34,6 +34,7 @@
 
 ## Prerequisites
 Ensure that you have the following:
+
 * AWS account
 * Terraform installed
 * Git client installed
@@ -44,21 +45,22 @@ Ensure that you have the following:
 # Modules
 
 ### 1. Authentication
-> Betore we do anything else, we should ensure that our account is authenticated!
+> Before we do anything else, we should ensure that our account is authenticated!<br>
+<br>
+    1. Create the first of two directories. (our region will be "us-west-2") <br>
+    2. Create a new file called `0-Auth.tf` in your project directory. <br>
+    3. Copy and paste the code from the `0-Auth.tf` file in the forked "class5" repository. <br>
+    4. Make the following adjustments to the code: Ensure your region is: "us-west-2" <br> 
+         *(This should be the same region which your AWS console is situated in)* <br>
+    5. Add your desired tags.<br>
+    6. At this point "SAVE" (Ctrl-S) your file!
 
-    1. Create the first of two directories. (our region will be "us-west-1") 
-    2. Create a new file called `0-Auth.tf` in your project directory.
-    3. Copy and paste the code from the `0-Auth.tf` file in the forked "class5" repository.
-    4. Make the following adjustments to the code:
-        * Replace region = "eu-west-1" with your desired region
-        * *(This should be the same region which your AWS console is situated in)*
-        * Add your desired tags.
-        * At this point "SAVE" (Ctrl-S) your file!
+---------------------------------------------
 
   Here is our **"0-Auth.tf"** code:
 ```
 provider "aws" {
-  region = "us-west-1"
+  region = "us-west-2"
 }
 
 terraform {
@@ -95,7 +97,7 @@ resource "aws_vpc" "app1" {
 
 resource "aws_vpc_endpoint" "s3" {
   vpc_id       = aws_vpc.app1.id
-  service_name = "com.amazonaws.us-west-1.s3"
+  service_name = "com.amazonaws.us-west-2.s3"
   vpc_endpoint_type = "Gateway"
 
   route_table_ids = [
@@ -721,4 +723,4 @@ terraform plan
 terraform apply
 ```
 
-
+## Successful Deployment Images:
