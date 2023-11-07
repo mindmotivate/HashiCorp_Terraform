@@ -1,4 +1,13 @@
-# Introduction to AWS Terraform Tutorial
+
+
+ <img src="https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/067d3999-20dd-4470-bedd-5d14b4749279" width="20%" height="20%">
+ <img src="https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/417ac0b9-ad96-4434-888a-d2389210845b" width="20%" height="20%">
+ <img src="https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/ccc54cbd-1a3b-45bc-8988-e1862fbce232" width="20%" height="20%">
+ <img src="https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/77ea6eea-73e3-47cd-ad26-743eed6f0f83" width="15%" height="15%">
+<img src="https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/40e91a80-8f4e-43b4-a529-4a3f55b225be" width="20%" height="20%">
+
+# Launching An AWS VPC in Terraform
+
 
 This tutorial will walk you through the steps of creating an AWS VPC with subnets using Terraform. At this point in time we have demonstrated or ability to create VPC's and Subnets from within the AWS console. We will not apply that knowledge towards the creation of our Terrafrom modules as we build out infrastructure using the terraform in our VSC terminal! 
 
