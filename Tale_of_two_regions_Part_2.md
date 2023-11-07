@@ -1,3 +1,6 @@
+
+![us-east-1 drawio](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/de62ab35-5d3e-4a38-9f12-d5fae110e721)
+
 # Tale Of Two Regions Part 2
 
 This tutorial will focus soley on our second region. Theo has given us the following requirements....
