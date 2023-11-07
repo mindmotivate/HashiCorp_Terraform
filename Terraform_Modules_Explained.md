@@ -1,6 +1,32 @@
-## Benefits of using modules in AWS Terraform
 
-Terraform modules provide a number of benefits for creating and managing AWS infrastructure, including:
+![image](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/3e81ac10-669f-4c5c-850e-00d3ee103b48)
+![OIG ANG_F0tCuUWhc](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/e7a6e1df-35e1-4754-97d4-dbb3f8fc73a5)
+![OIG](https://github.com/mindmotivate/HashiCorp_Terraform/assets/130941970/d6f98125-6bb4-4d7c-8907-2936af75045f)
+
+## Terraform Modules
+
+If you are completely new to the concept of Terraform Modules, think of them like a Pre-fab house that is built off-site and then transported to the desired location for assembly. This process makes them much faster and easier to build than a traditional home structure. Similarly, Terraform modules are pre-built infrastructure components that can be easily reused across different environments and projects.
+
+In other words, Terraform modules are like the individual building blocks of a pre-fab house, such as the walls, roof, and floors.
+Terraform providers are like the tools and materials needed to assemble the pre-fab house, such as the foundation, electrical wiring, and plumbing.
+Terraform configurations are like the blueprints for the pre-fab house, which specify how the individual building blocks should be assembled.
+To build a pre-fab house, you would first need to choose a design and order the necessary building blocks from the manufacturer. Once the building blocks have been delivered, you would then need to assemble them according to the blueprints.
+
+To build cloud infrastructure with Terraform, you would first need to choose the necessary Terraform modules for the components you need, such as EC2 instances, EBS volumes, and security groups. Once you have chosen the modules, you would then need to configure them and assemble them into a complete infrastructure configuration.
+
+Terraform providers provide the necessary tools and materials to interact with the cloud provider of your choice. For example, the AWS provider provides Terraform with the ability to create and manage AWS resources.
+
+Terraform configurations are written in their own proprietary HashiCorp Configuration Language "HCL", (which may remind of you of JSON a bit) which is a declarative language that allows you to specify what you want to achieve, rather than how to achieve it. This makes Terraform configurations easy to read and maintain.
+
+Imagine you want to create a new web server on AWS. You could write all of the necessary Terraform code yourself, but that would be time-consuming and error-prone. Instead, you could use a pre-built Terraform module for web servers on AWS. This module would contain all of the necessary configuration to create and manage the web server, including the EC2 instance, EBS volume, and security group.
+
+To use the module, you would simply need to add it to your Terraform configuration and specify the necessary parameters, such as the instance size and EBS volume size. Terraform would then take care of creating and managing the web server for you.
+
+To put it bluntly, using pre-built Terraform modules, you can create infrastructure more efficiently and with fewer errors.
+
+## Top 3 Benefits of using modules in AWS Terraform!
+
+If i had to narrow the field down to 3, I would include:
 
 > **1. Reusability**
 One of the main benefits of creating individual Terraform modules is that they can be reused in multiple deployments, saving time and effort. This is especially beneficial for organizations that deploy similar infrastructure across multiple environments. For example, a module for a basic VPC with public and private subnets and route tables could be reused in all deployments, simply passing in different parameters for the CIDR block, number of subnets, and resource tags.
